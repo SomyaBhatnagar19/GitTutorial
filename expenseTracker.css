@@ -1,0 +1,32 @@
+*{
+    box-sizing: border-box;
+}
+body{
+    background-color: rgb(147, 156, 197);
+}
+#main-heading {
+    text-align: center;
+    border-color: black;
+    background-color: bisque;
+}
+.main-card {
+    border-color: black;
+    background-color: rgb(238, 213, 176);
+    margin: auto;
+    margin-top: 5%;
+    width: 500px;
+    padding: 3rem 2rem;
+    border-style: solid;
+    border-color: #170772a6;
+    border-radius: 2%;
+}
+#add-expense {
+    background-color: rgb(219, 157, 228);
+    border-color: blueviolet;
+    border-radius: 10%;
+    font-size: large;
+}
+input{
+    width: 100%;
+    padding:5px;
+}

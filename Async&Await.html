@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+        *{
+            padding: 2%;
+            margin: auto;
+        }
+        h1{
+            border-color: rgb(7, 7, 7);
+            background-color: rgb(200, 148, 216);
+            text-align: center;
+        }
+    </style>
+    <title>Asyn Await Javascript</title>
+</head>
+<body>
+    <h1>Asyn Await Javascript</h1>
+</body>
+<script>
+console.log('Person 1 : Ticket Shown');
+console.log('Person 2 : Ticket Shown');
+console.log('Person 3 : Ticket Shown');
+//--------------CODE WITH PROMISE-------------------------
+// const promiseOfTicket = new Promise((resolve, reject)=>{
+//   setTimeout(() => {
+//     resolve('Ticket');
+//   }, 3000);
+// })
+
+// const getPopcorn = promiseOfTicket.then((t) => {
+//   return new Promise((resolve, reject)=>{
+//     resolve(`${t} & Popcorn`);
+//   })
+// })
+
+// const getButter = getPopcorn.then((t) => {
+//   return new Promise((resolve, reject)=>{
+//     resolve(`${t} with Butter`);
+//   })
+// })
+
+// const getColdDrinks = getButter.then((t)=>{
+//   return new Promise((resolve, reject)=>{
+//     resolve(`${t} along with Cold Drink`);
+//   })
+// })
+// getColdDrinks.then((t)=>{
+//   console.log(t)
+// })
+
+//------------------------CODE USING Async & Await---------------
+// const PreMovie = async()=>{
+//   const promiseOfTicket = new Promise((resolve, reject)=> {
+//     setTimeout(()=>{
+//       resolve('Ticket');
+//     },3000)
+//   });
+
+//   const getPopcorn = new Promise((resolve, reject)=> resolve('Got Popcorn'));
+//   const addButter  = new Promise((resolve, reject)=> resolve('with Butter'));
+//   const getColdDrinks = new Promise((resolve, reject)=> resolve('along with Cold Drink'));
+//   let ticket = await promiseOfTicket;
+//   let popcorn = await getPopcorn;
+//   console.log(`${popcorn}`);
+//   let butter = await addButter;
+//   console.log(`${butter}`);
+//   let coldDrink = await getColdDrinks;
+//   console.log(`${coldDrink}`);
+
+// return ticket;
+// }
+
+// PreMovie().then((m)=>console.log(`Person 4 : ${m}`));
+// console.log('Person 5 : Ticket Shown');
+// console.log('Person 6 : Ticket Shown');
+
+//---------------------USER CODE USING promise all----------------------
+const PreMovie = async()=>{
+  const promiseOfTicket = new Promise((resolve, reject)=> {
+    setTimeout(()=>{
+      resolve('Ticket');
+    },3000)
+  });
+
+  const getPopcorn = new Promise((resolve, reject)=> resolve('Got Popcorn'));
+  const addButter  = new Promise((resolve, reject)=> resolve('with Butter'));
+  const getColdDrinks = new Promise((resolve, reject)=> resolve('along with Cold Drink'));
+
+  let ticket = await promiseOfTicket;
+  let [popcorn, butter, coldDrink] = await Promise.all([getPopcorn, addButter, getColdDrinks])
+  console.log(`${popcorn} ${butter} ${coldDrink}`)
+return ticket;
+}
+
+PreMovie().then((m)=>console.log(`Person 4 : ${m}`));
+console.log('Person 5 : Ticket Shown');
+console.log('Person 6 : Ticket Shown');
+</script>
+</html>

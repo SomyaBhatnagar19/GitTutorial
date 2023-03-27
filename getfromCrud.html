@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8'/>
+    <title>Book an appointment</title>
+    <link rel="stylesheet" href="style.css"/>
+  </head>
+  <body>
+    <header>
+        <h1>JS for Beginners</h1>
+    </header>
+    <div class="container">
+        <form id="my-form">
+            <h2>Add User Details</h2>
+            <div>
+                <label>Name:</label>
+                <input text="name" id="name">
+            </div>
+            <div>
+                <label>Email:</label>
+                <input text="email" id="email">
+            </div>
+            <button id="btn">Submit</button>
+        </form>    
+        <ul id='List-of-User Details'></ul>
+    </div>
+
+  </body>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+  <script>
+    let form = document.getElementById('my-form');
+    // let btn = document.getElementById('button');
+    form.addEventListener('submit', storeDetails);
+    // btn.addEventListener('click',delete);
+
+    function storeDetails(e){
+        e.preventDefault();
+        let name = document.getElementById('name').value;
+        let email = document.getElementById('email').value;
+
+        const details={
+            name: name,
+            email: email,
+        }
+
+        // localStorage.setItem(details.email,JSON.stringify(details));
+        axios.post("https://crudcrud.com/api/537a6e906b264db89de8c66b784af343/appointmentData", details)
+        .then((response)=>{
+            showUserData(response.data)
+            //console.log(response)
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+        //showUserData(details);
+
+    }
+
+    
+    function showUserData(details, id){
+        let parentElem = document.getElementById('List-of-User Details');
+        let childElem = document.createElement('li');
+
+        //adding the delete button functionality
+        let deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn btn-danger btn-sm';
+        deleteBtn.id = 'delete';
+        deleteBtn.innerHTML ='<p>Delete</p>';
+        deleteBtn.style.backgroundColor = 'red';
+        childElem.textContent = details.name+' - '+details.email;
+        deleteBtn.onclick = ()=> {
+            localStorage.removeItem(details.email);
+            parentElem.removeChild(childElem);
+        }
+
+        //adding editing functionality
+        let editBtn = document.createElement('button');
+        editBtn.id = 'edit';
+        editBtn.className = 'btn btn-sm';
+        editBtn.style.backgroundColor = 'pink';
+        editBtn.innerHTML = 'Edit';
+        editBtn.onclick=()=>
+        {
+            document.getElementById('name').value = details.name;
+            document.getElementById('email').value = details.email;
+            
+            localStorage.removeItem(details.email);
+            parentElem.removeChild(childElem);
+            
+        }
+        childElem.appendChild(deleteBtn);
+        childElem.appendChild(editBtn);
+        parentElem.appendChild(childElem);
+    }
+    window.addEventListener("load", (event) => {
+        axios
+            .get("https://crudcrud.com/api/537a6e906b264db89de8c66b784af343/appointmentData")
+            .then((response) => {
+            console.log(res);
+            for (let i = 0; i < response.data.length; i++) {
+                showUserDataOnScreen(response.data[i], response.data[i]._id);
+            }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+});
+
+  </script>
+
+
+</html>

@@ -3,97 +3,107 @@
   <head>
     <meta charset='UTF-8'/>
     <title>Book an appointment</title>
-    <link rel="stylesheet" href="style.css"/>
-  </head>
-  <body>
+    <link rel="stylesheet" href="style.css" />
+    <title>dom6</title>
+</head>
+<body>
     <header>
         <h1>JS for Beginners</h1>
     </header>
-    <div class="container">
-        <form id="my-form">
-            <h2>Add User Details</h2>
-            <div>
-                <label>Name:</label>
-                <input text="name" id="name">
-            </div>
-            <div>
-                <label>Email:</label>
-                <input text="email" id="email">
-            </div>
-            <button id="btn">Submit</button>
-        </form>    
-        <ul id='List-of-User Details'></ul>
-    </div>
+    <form action="submit" id="formData">
+        <label>Name</label>
+        <input type="text" name="username" id ="nameInputTag" required>
+        <label>Email Id</label>
+        <input type="email" name="emailid"id="emailInputTag" required>
 
-  </body>
+        <button>Submit</button>
+        <ul id="userList"></ul>
+    </form>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+<script>
+var formDetails = document.getElementById("formData");
+formDetails.addEventListener("submit", runEvent);
+
+function runEvent(event) {
+  event.preventDefault();
+  const name = event.target.username.value;
+  const email = event.target.emailid.value;
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
-  <script>
-    let form = document.getElementById('my-form');
-    // let btn = document.getElementById('button');
-    form.addEventListener('submit', storeDetails);
-    // btn.addEventListener('click',delete);
+  const myObj = {
+    name: name,
+    email: email,
+    
+  };
 
-    function storeDetails(e){
-        e.preventDefault();
-        let name = document.getElementById('name').value;
-        let email = document.getElementById('email').value;
+  // show user data on the screen
+  var liBtn = document.createElement("button");
+  var liBtnText = document.createTextNode("Delete");
+  var editBtn = document.createElement("button");
+  var editBtnText = document.createTextNode("Edit");
 
-        const details={
-            name: name,
-            email: email,
-        }
+  showUserDataOnScreen(myObj);
 
-        // localStorage.setItem(details.email,JSON.stringify(details));
-        axios.post("https://crudcrud.com/api/537a6e906b264db89de8c66b784af343/appointmentData", details)
-        .then((response)=>{
-            showUserData(response.data)
-            //console.log(response)
-        })
-        .catch((err)=>{
-            console.log(err)
-        })
-        //showUserData(details);
+  // Saving the user details to the server
+  axios
+    .post(
+      "https://crudcrud.com/api/537a6e906b264db89de8c66b784af343/appointmentData",
+      myObj
+    )
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
-    }
+  // Clear the form fields
+  formDetails.reset();
+}
 
-    function showUserData(details){
-        let parentElem = document.getElementById('List-of-User Details');
-        let childElem = document.createElement('li');
+function showUserDataOnScreen(val, id) {
+  var ulItems = document.getElementById("userList");
+  var liItems = document.createElement("li");
+  liItems.setAttribute("id", id);
+  var liText = document.createTextNode(JSON.stringify(val));
+  liItems.appendChild(liText);
+  var liBtn = document.createElement("button");
+  var liBtnText = document.createTextNode("Delete");
+  liBtn.appendChild(liBtnText);
+  liItems.appendChild(liBtn);
+  var editBtn = document.createElement("button");
+  var editBtnText = document.createTextNode("Edit");
+  editBtn.appendChild(editBtnText);
+  liItems.appendChild(editBtn);
+  ulItems.appendChild(liItems);
+  liBtn.addEventListener("click", deleteDetails);
 
-        //adding the delete button functionality
-        let deleteBtn = document.createElement('button');
-        deleteBtn.className = 'btn btn-danger btn-sm';
-        deleteBtn.id = 'delete';
-        deleteBtn.innerHTML ='<p>Delete</p>';
-        deleteBtn.style.backgroundColor = 'red';
-        childElem.textContent = details.name+' - '+details.email;
-        deleteBtn.onclick = ()=> {
-            localStorage.removeItem(details.email);
-            parentElem.removeChild(childElem);
-        }
+  function deleteDetails() {
+    ulItems.removeChild(liItems);
+  }
 
-        //adding editing functionality
-        let editBtn = document.createElement('button');
-        editBtn.id = 'edit';
-        editBtn.className = 'btn btn-sm';
-        editBtn.style.backgroundColor = 'pink';
-        editBtn.innerHTML = 'Edit';
-        editBtn.onclick=()=>
-        {
-            document.getElementById('name').value = details.name;
-            document.getElementById('email').value = details.email;
-            
-            localStorage.removeItem(details.email);
-            parentElem.removeChild(childElem);
-            
-        }
-        childElem.appendChild(deleteBtn);
-        childElem.appendChild(editBtn);
-        parentElem.appendChild(childElem);
-    }
+  editBtn.addEventListener("click", editDetails);
 
-  </script>
+  function editDetails() {
+    document.getElementById("nameInputTag").value = val.name;
+    document.getElementById("emailInputTag").value = val.email;
+    document.getElementById("phonenumberInputTag").value = val.phonenumber;
+    ulItems.removeChild(liItems);
+  }
+}
+window.addEventListener("load", (event) => {
+  axios
+    .get("https://crudcrud.com/api/537a6e906b264db89de8c66b784af343/appointmentData")
+    .then((res) => {
+      console.log(res);
+      for (let i = 0; i < res.data.length; i++) {
+        showUserDataOnScreen(res.data[i], res.data[i]._id);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 
-
+</script>
 </html>
